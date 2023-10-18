@@ -1,5 +1,5 @@
 # Cholera_Cameroon
-
+Cholera is an acute diarrheal illness caused by infection of the intestine with Vibrio cholerae bacteria. People can get sick when they swallow food or water contaminated with cholera bacteria. The infection is often mild or without symptoms, but can sometimes be severe and life-threatening.
 
 ## Sources:
 [Global hydro-environmental lake characteristics at high spatial resolution](https://www.nature.com/articles/s41597-022-01425-z)
