@@ -13,3 +13,7 @@ Cholera is an acute diarrheal illness caused by infection of the intestine with 
 [Cholera Risk: A Machine Learning Approach Applied to Essential Climate Variables](https://www.mdpi.com/1660-4601/17/24/9378)
 
 [Machine Learning Model for Imbalanced Cholera Dataset in Tanzania](https://www.hindawi.com/journals/tswj/2019/9397578/)
+
+[HydroATLAS](https://www.hydrosheds.org/hydroatlas)
+
+[BasinATLAS Attributes (version 1.0)](https://data.hydrosheds.org/file/technical-documentation/BasinATLAS_Catalog_v10.pdf)
