@@ -1,5 +1,5 @@
 # Cholera_Cameroon
-
+Cholera is an acute diarrheal illness caused by infection of the intestine with Vibrio cholerae bacteria. People can get sick when they swallow food or water contaminated with cholera bacteria. The infection is often mild or without symptoms, but can sometimes be severe and life-threatening.
 
 ## Sources:
 [Global hydro-environmental lake characteristics at high spatial resolution](https://www.nature.com/articles/s41597-022-01425-z)
@@ -13,3 +13,7 @@
 [Cholera Risk: A Machine Learning Approach Applied to Essential Climate Variables](https://www.mdpi.com/1660-4601/17/24/9378)
 
 [Machine Learning Model for Imbalanced Cholera Dataset in Tanzania](https://www.hindawi.com/journals/tswj/2019/9397578/)
+
+[HydroATLAS](https://www.hydrosheds.org/hydroatlas)
+
+[BasinATLAS Attributes (version 1.0)](https://data.hydrosheds.org/file/technical-documentation/BasinATLAS_Catalog_v10.pdf)
