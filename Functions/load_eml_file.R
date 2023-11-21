@@ -1,11 +1,8 @@
-
 library(readxl)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-
-
-
+library(stringr)
 
 # read the file
 cholera_data_2011 =read_excel("RawData/Cholera_Cameroon_2000-2018.xlsx", sheet=2)
@@ -200,16 +197,16 @@ cholera = rbind(
         attackRate = as.numeric(attackRate),
         deathRate = as.numeric(deathRate),
         year = factor(year)
-    ) %>%
-    filter(
-        # list of district that start with number
-        !district %in% sort(unique(cholera$district))[1:48]
     )
 
-table(cholera$district)
+sorted_district <- sort(unique(cholera$district))
 
+cholera <- cholera %>%
+    filter(
+        # filter list of district that start with number
+        !district %in% sorted_district[1:48]
+    )
 
-summary(cholera)
 
 
 # Case and Death for each year and week
@@ -275,63 +272,67 @@ ggsave("Figures/box_col_week_Average_attackRate.jpg",
 
 # Calculate the average case count by region
 average_cases_by_region <- cholera %>%
+    ungroup()%>%
     group_by(regions) %>%
     summarise(avg_cases = mean(case, na.rm = TRUE),
               avg_death = mean(death, na.rm = TRUE),
               avg_attackRate = mean(attackRate, na.rm = TRUE),
               avg_deathRate = mean(deathRate, na.rm = TRUE))
+    mutate(
+        NAME_1 = str_to_title(average_cases_by_region$regions)
+        )
 
-
+names(cholera)
 
 average_cases_by_district <- cholera %>%
     group_by(district) %>%
     summarise(avg_cases = mean(case, na.rm = TRUE),
               avg_death = mean(death, na.rm = TRUE),
               avg_attackRate = mean(attackRate, na.rm = TRUE),
-              avg_deathRate = mean(deathRate, na.rm = TRUE))
-
-summary(cholera)
-table(cholera$district)
-# Create a basic map of Cameroon
-cameroon_map <- map_data("world", region = "Cameroon")
-
-# Merge the map data with the average case data
-map_data_with_cases <- merge(cameroon_map, average_cases_by_region, by.x = "region", by.y = "regions")
-
-
-ggplot(data = map_data_with_cases, aes(x = long, y = lat, group = group, fill = avg_cases)) +
-    geom_polygon(color = "white") +
-    coord_map() +
-    scale_fill_gradient(low = "white", high = "red", name = "Average Cases") +
-    labs(title = "Cholera Cases in Cameroon by Region") +
-    theme_minimal()
-
-library(rnaturalearth)
+              avg_deathRate = mean(deathRate, na.rm = TRUE)) %>%
+    filter(
+        !is.na(district)
+    )
 
 
 
-# Load a map of countries, including Cameroon
-world_map <- ne_countries(scale = "medium", returnclass = "sf")
+library(raster)
+library(ggplot2)
+library(stringr)
 
-# Filter the data to include only Cameroon
-cameroon_map <- world_map %>%
-    filter(admin == "Cameroon")
+Cameroon <- getData("GADM", country="Cameroon", level=0)
+Cameroon1 <- getData("GADM", country="Cameroon", level=1)
+Cameroon2 <- getData("GADM", country="Cameroon", level=2)
 
-# Assuming you have your cholera data in a data frame called 'cholera_data'
+# Assuming you've already loaded the "Cameroon2" dataset using getData
+summary(Cameroon1M)
+# Create a plot using ggplot
+Cameroon1M <- merge(Cameroon1,
+                   average_cases_by_region,
+                   by.x = "NAME_1",
+                   by.y = "NAME_1",
+                   all.x = TRUE)
 
-# Calculate the average case count by region
-average_cases_by_region <- cholera %>%
-    group_by(district) %>%
-    summarise(avg_cases = mean(case, na.rm = TRUE))
+cameroon_df <- fortify(Cameroon1M)
+#########################################
 
-# Merge the map data with the average case data
-map_data_with_cases <- left_join(cameroon_map, average_cases_by_region, by = c("name" = "regions"))
 
-# Create the map
-ggplot(data = map_data_with_cases, aes(geometry = geometry, fill = avg_cases)) +
-    geom_sf() +
-    scale_fill_gradient(low = "white", high = "red", name = "Average Cases") +
-    labs(title = "Cholera Cases in Cameroon by Region") +
-    theme_minimal()
 
-summary(cholera)
+# install.packages("sf")
+library(sf)
+# install.packages("dplyr")
+library(dplyr)
+#install.packages("giscoR")
+library(giscoR)
+
+year_ref <- 2016
+
+nuts2_IT <- gisco_get_nuts(
+    year = year_ref,
+    resolution = 20, 
+    nuts_level = 2,
+    country = "Cameroon")
+    dplyr::select(NUTS_ID, NAME_LATN)
+
+plot(st_geometry(nuts2_IT)) 
+
